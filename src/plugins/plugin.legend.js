@@ -163,8 +163,8 @@ module.exports = function(Chart) {
 		beforeBuildLabels: noop,
 		buildLabels: function() {
 			var me = this;
-			var labelOpts = me.options.labels;
-			var legendItems = labelOpts.generateLabels.call(me, me.chart);
+			var labelOpts = me.options.labels || {};
+			var legendItems = labelOpts.generateLabels ? labelOpts.generateLabels.call(me, me.chart) : [];
 
 			if (labelOpts.filter) {
 				legendItems = legendItems.filter(function(item) {
