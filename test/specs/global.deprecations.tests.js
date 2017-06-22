@@ -163,6 +163,43 @@ describe('Deprecations', function() {
 				});
 			});
 		});
+
+		describe('Time Axis: unitStepSize option', function() {
+			function createScale(data, options) {
+				var scaleID = 'myScale';
+				var mockContext = window.createMockContext();
+				var Constructor = Chart.scaleService.getScaleConstructor('time');
+				var scale = new Constructor({
+					ctx: mockContext,
+					options: options,
+					chart: {
+						data: data
+					},
+					id: scaleID
+				});
+
+				scale.update(400, 50);
+				return scale;
+			}
+
+			it('should use the stepSize property', function() {
+				var mockData = {
+					labels: ['2015-01-01T20:00:00', '2015-01-01T21:00:00'],
+				};
+
+				var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('time'));
+				config.time.unit = 'hour';
+				config.time.unitStepSize = 2;
+
+				var scale = createScale(mockData, config);
+				scale.update(2500, 200);
+				var ticks = scale.ticks.map(function(tick) {
+					return tick.value;
+				});
+
+				expect(ticks).toEqual(['8PM', '10PM']);
+			});
+		});
 	});
 
 	describe('Version 2.5.0', function() {
